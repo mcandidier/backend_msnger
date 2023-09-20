@@ -86,6 +86,7 @@ class AuthView(APIView):
     def post(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return HttpResponseForbidden()
+        
         user = request.user
         channel_name = request.data.get('channel_name')
         socket_id = request.data.get('socket_id')

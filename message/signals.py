@@ -9,6 +9,7 @@ from pusher import Pusher
 from django.db.models.signals import m2m_changed
 from .serializers import MessageSerializer, MessageStatusSerializer
 
+
 def _create_status(sender, instance, action, **kwargs):
     pusher_client = Pusher(
         app_id=settings.PUSHER_APP_ID,
@@ -16,7 +17,6 @@ def _create_status(sender, instance, action, **kwargs):
         secret=settings.PUSHER_SECRET,
         cluster=settings.PUSHER_CLUSTER,
     )
-    # serializer = MessageStatusSerializer(instance=instance)
     users = instance.seen_by.all().values_list('name', flat=True)
     pusher_client.trigger(f'channel-{instance.message.conversation.id}', 'message:seen', {'message': instance.id, 'seen_by': list(users)})
 
@@ -36,12 +36,11 @@ def send_push_notification(sender, instance, created, **kwargs):
             status=0,
         )
         
-        pusher_client.trigger(f'{instance.conversation.id}-conversation', 'new-message', {'conversation_id': instance.conversation.id, 'message': instance.content, 'sender': instance.sender.id})
-
+        pusher_client.trigger(f'private-{instance.conversation.id}-conversation', 'new-message', {'conversation_id': instance.conversation.id, 'message': instance.content, 'sender': instance.sender.id})
     
         for user in instance.conversation.participants.all():
             if user.id != instance.sender.id:
-                channel = f'{user.id}-conversations';
+                channel = f'private-{user.id}-conversations';
                 print('trigger', channel)
                 serializer = MessageSerializer(instance)
                 pusher_client.trigger(channel, 'new-message', serializer.data)
@@ -54,12 +53,11 @@ def send_push_coversation(sender, instance, action, **kwargs):
             key=settings.PUSHER_KEY,
             secret=settings.PUSHER_SECRET,
             cluster=settings.PUSHER_CLUSTER,
+            ssl=True
         )
         participant_ids = [x for x in kwargs.get('pk_set')]
         for user in participant_ids:
-            channel = f'{user}-conversations';
-
-            
+            channel = f'private-{user}-conversations';            
             pusher_client.trigger(channel, 'new-channel', {'conversation_id': instance.id})
 
 m2m_changed.connect(send_push_coversation, sender=Conversation.participants.through)
