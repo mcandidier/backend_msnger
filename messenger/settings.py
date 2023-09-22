@@ -81,15 +81,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'messenger.wsgi.application'
 
 
-# # Database
-# # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 
 DATABASES = {
@@ -163,8 +154,12 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 
-PUSHER_APP_ID = '1660973'
-PUSHER_KEY = '40060fb553ad4e6a81ed'
-PUSHER_SECRET = 'ea14802e1823dc0e57a6'
-PUSHER_CLUSTER = 'ap1'
+PUSHER_APP_ID = ''
+PUSHER_KEY = ''
+PUSHER_SECRET = ''
+PUSHER_CLUSTER = ''
 
+try:
+    from messenger.local_settings import *
+except ImportError:
+    pass

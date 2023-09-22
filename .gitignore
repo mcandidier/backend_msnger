@@ -2,3 +2,5 @@ env/
 *.pyc
 
 .vscode
+
+local_settings.py
