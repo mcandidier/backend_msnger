@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-# from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from rest_framework.response import Response
@@ -11,7 +10,11 @@ from rest_framework.decorators import action
 from django.conf import settings
 
 from django.http import JsonResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt  # Import the csrf_exempt decorator
+from django.http import HttpResponseBadRequest  # Import HttpResponseBadRequest
+
 from pusher import Pusher
+
 
 from accounts.models import CustomUser
 from .serializers import ConversationSerializer, MessageSerializer, MessageStatusSerializer
@@ -21,7 +24,7 @@ from .permissions import IsParticipantInConversation
 class ConversationView(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     # authentication_classes = [JWTTokenUserAuthentication]
 
     def get_queryset(self):
@@ -41,6 +44,14 @@ class ConversationView(viewsets.ModelViewSet):
                     conversation.save()
             return Response(status=201, data=serializer.data)
         return Response(status=400)
+
+    @action(methods=['get'], detail=True, url_path='latest')
+    def get_latest_message(self, *args, **kwargs):
+
+        message =  Message.objects.filter(conversation_id=kwargs.get('pk')).last()
+        serializer = MessageSerializer(instance=message)
+        return Response(status=200, data=serializer.data)
+        
 
 
 class MessageView(viewsets.ModelViewSet):
@@ -77,8 +88,6 @@ class MessageStatusView(APIView):
         return Response(status=400)
 
 
-from django.views.decorators.csrf import csrf_exempt  # Import the csrf_exempt decorator
-from django.http import HttpResponseBadRequest  # Import HttpResponseBadRequest
 
 class AuthView(APIView):
     permission_classes = [IsAuthenticated]

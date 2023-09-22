@@ -146,20 +146,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:8000",  # For development
-#     "http://127.0.0.1:8000",  # Another development address
-# ]
-
-# CORS_ALLOW_METHODS = [
-#     'GET',
-#     'POST',
-#     'PUT',
-#     'PATCH',
-#     'DELETE',
-#     'OPTIONS',
-# ]
-
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 
@@ -177,8 +163,8 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 
-
-PUSHER_APP_ID = '1664283'
-PUSHER_KEY = '5c0bf6e238a79b931a01'
-PUSHER_SECRET = '03c5cfcfb59469b3f02f'
+PUSHER_APP_ID = '1660973'
+PUSHER_KEY = '40060fb553ad4e6a81ed'
+PUSHER_SECRET = 'ea14802e1823dc0e57a6'
 PUSHER_CLUSTER = 'ap1'
+
