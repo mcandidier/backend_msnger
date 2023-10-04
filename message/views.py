@@ -25,7 +25,6 @@ class ConversationView(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [JWTTokenUserAuthentication]
 
     def get_queryset(self):
         q = Conversation.objects.filter(participants=self.request.user)
@@ -38,20 +37,24 @@ class ConversationView(viewsets.ModelViewSet):
             conversation = serializer.save(participants=[self.request.user], owner=request.user)
             for user_id in participant_ids:
                 if user_id != request.user.id:
-                    user = CustomUser.objects.get(pk=user_id)
-                    conversation.participants.add(user)
-                    conversation.title = user.name if user.name else user.username
-                    conversation.save()
+                    try:
+                        user = CustomUser.objects.get(pk=user_id)
+                        conversation.participants.add(user)
+                        conversation.save()
+                    except CustomUser.DoesNotExist():
+                        pass
+                    # conversation.title = user.name if user.name else user.username
             return Response(status=201, data=serializer.data)
         return Response(status=400)
 
     @action(methods=['get'], detail=True, url_path='latest')
     def get_latest_message(self, *args, **kwargs):
-
-        message =  Message.objects.filter(conversation_id=kwargs.get('pk')).last()
-        serializer = MessageSerializer(instance=message)
-        return Response(status=200, data=serializer.data)
-        
+        message =  Message.objects.filter(conversation_id=kwargs.get('pk'))
+        if message.exists():
+            message = message.last()
+            serializer = MessageSerializer(instance=message)
+            return Response(status=200, data=serializer.data)
+        return Response(status=200)
 
 
 class MessageView(viewsets.ModelViewSet):
@@ -115,6 +118,7 @@ class AuthView(APIView):
                 'user_info': {  # We can put whatever we want here
                     'username': request.user.username,
                     'email': request.user.email,
+                    'id': request.user.id
                 }
             }
         )

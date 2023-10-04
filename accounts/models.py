@@ -30,6 +30,7 @@ class CustomUser(AbstractUser):
     # Add custom fields if needed
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=128, blank=True, null=True)
+    profile_image = models.URLField(null=True, blank=True)
   
     objects = CustomUserManager()
 
