@@ -8,6 +8,13 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("name", "email")
 
+
+    def save(self, request):
+        user = super(CustomUserCreationForm, self).save(request)
+        user.save()
+        return user
+    
+
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
