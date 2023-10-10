@@ -10,11 +10,6 @@ class Conversation(models.Model):
     title = models.CharField(max_length=128, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-
-    def __str__(self):
-        message = self.participants.exclude(pk=self.owner.id).first()
-        return f'{self.owner.username} -> {message.username}'
-
     class Meta:
         ordering = ['-timestamp']
 
