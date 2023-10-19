@@ -21,12 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i#penjc9wyyqmu7g(+2m$10i0vu-mb7o%_#=(33@!6@%1&t0g^'
+# SECRET_KEY = 'django-insecure-i#penjc9wyyqmu7g(+2m$10i0vu-mb7o%_#=(33@!6@%1&t0g^'
 
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*.vercel.app']
+ALLOWED_HOSTS = ['backend-msnger.vercel.app']
 
 
 # Application definition
@@ -168,10 +169,10 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 
-PUSHER_APP_ID = ''
-PUSHER_KEY = ''
-PUSHER_SECRET = ''
-PUSHER_CLUSTER = ''
+PUSHER_APP_ID = os.environ.get('PUSHER_APP_ID')
+PUSHER_KEY = os.environ.get('PUSHER_KEY')
+PUSHER_SECRET = os.environ.get('PUSHER_SECRET')
+PUSHER_CLUSTER = os.environ.get('PUSHER_CLUSTER')
 
 # try:
 #     from messenger.local_settings import *
