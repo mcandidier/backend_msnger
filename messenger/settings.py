@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 import datetime
 from pathlib import Path
 
@@ -81,18 +82,29 @@ TEMPLATES = [
 WSGI_APPLICATION = 'messenger.wsgi.application'
 
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'db_msg',
-        'USER': 'dev',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': '12bv83lijssFE4or4GmO',
+        'HOST': 'containers-us-west-205.railway.app',
+        'PORT': '5941',
     }
 }
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'db_msg',
+#         'USER': 'dev',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
@@ -130,6 +142,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -159,7 +173,7 @@ PUSHER_KEY = ''
 PUSHER_SECRET = ''
 PUSHER_CLUSTER = ''
 
-try:
-    from messenger.local_settings import *
-except ImportError:
-    pass
+# try:
+#     from messenger.local_settings import *
+# except ImportError:
+#     pass
