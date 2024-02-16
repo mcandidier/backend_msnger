@@ -13,8 +13,17 @@ import os
 import datetime
 from pathlib import Path
 
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,12 +31,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-i#penjc9wyyqmu7g(+2m$10i0vu-mb7o%_#=(33@!6@%1&t0g^'
+# SECRET_KEY = os.environ.get('SECRET_KEY')
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['backend-msnger.vercel.app']
+ALLOWED_HOSTS = ['backend-msnger.vercel.app', 'localhost']
 
 
 # Application definition
@@ -88,9 +100,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': '12bv83lijssFE4or4GmO',
-        'HOST': 'containers-us-west-205.railway.app',
-        'PORT': '5941',
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
 }
 
@@ -169,12 +181,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 
-PUSHER_APP_ID = os.environ.get('PUSHER_APP_ID')
-PUSHER_KEY = os.environ.get('PUSHER_KEY')
-PUSHER_SECRET = os.environ.get('PUSHER_SECRET')
-PUSHER_CLUSTER = os.environ.get('PUSHER_CLUSTER')
-
-# try:
-#     from messenger.local_settings import *
-# except ImportError:
-#     pass
+PUSHER_APP_ID = env('PUSHER_APP_ID')
+PUSHER_KEY = env('PUSHER_KEY')
+PUSHER_SECRET = env('PUSHER_SECRET')
+PUSHER_CLUSTER = env('PUSHER_CLUSTER')
